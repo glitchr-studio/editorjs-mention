@@ -1,6 +1,6 @@
 {
   "name": "editorjs-mention",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "Mention tool for Editor.js",
   "main": "src/index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "tool",
     "variables"
   ],
-  "author": "xkzl",
+  "author": "Marco Meyer <marco.meyer@glitchr.io>",
   "license": "GPL",
   "repository": {
     "url": "ssh://git@gitlab.glitchr.dev:public-repository/javascript/editor-js/mention.git",
