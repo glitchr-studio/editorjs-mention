@@ -19,122 +19,549 @@ export default class Mention {
         this.button.classList.toggle(this.api.styles.inlineToolButtonActive, state);
     }
     
-    constructor({api}) {
+    constructor({config, api}) {
+
         this.api = api;
+        this.config = config;
+
         this.button = null;
         this._state = false;
-    
+
+        this.mentionMarker = undefined;
+
         this.tag = 'MARK';
-        this.class = 'cdx-marker';
-        this.settings = [
-        {
-            name: 'hashtag',
-            marker: '#',
-            color: "red",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="m 20.540674,10.19821 a 1.4973787,1.7835812 0 0 0 0,-3.567162 H 17.860285 L 18.489276,2.49314 A 1.4993624,1.785944 0 0 0 15.5394,1.8510508 L 14.790576,6.631048 H 11.12225 L 11.750962,2.49314 A 1.4993624,1.785944 0 0 0 8.801086,1.8510508 L 8.05254,6.631048 H 4.8181269 a 1.4973787,1.7835812 0 1 0 0,3.567162 H 7.5358585 L 6.9893581,13.765373 H 3.7699943 a 1.4973787,1.7835811 0 0 0 0,3.567161 h 2.6803879 l -0.628991,4.137909 a 1.4993623,1.7859439 0 1 0 2.9498758,0.642089 l 0.748547,-4.779998 h 3.691177 L 12.582,21.470443 a 1.4993625,1.7859441 0 1 0 2.949876,0.642089 l 0.748826,-4.779998 h 3.211838 a 1.4973787,1.7835811 0 1 0 0,-3.567161 h -2.717731 l 0.5465,-3.567163 z m -6.813002,3.567163 h -3.691177 l 0.5465,-3.567163 h 3.691177 z" /></svg>`
-        },
-        {
-            name: 'arobase',
-            marker: '@',
-            color: "blue",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="M 3.28397,12.1083 C 3.70912,7.22201 8.02178,3.25 12.8523,3.25 c 2.8113,0 4.8463,0.91965 6.1287,2.31536 1.2808,1.39388 1.9387,3.40094 1.7315,5.83104 -0.4514,3.4808 -1.851,4.4288 -2.5167,4.5733 -0.3603,0.0782 -0.6204,-0.021 -0.7629,-0.1435 -0.1273,-0.1095 -0.2439,-0.3052 -0.1951,-0.6518 l 1.0343,-7.757 C 18.3451,6.86996 17.9605,6.367 17.413,6.29401 L 16.9174,6.22792 C 16.37,6.15493 15.867,6.53955 15.794,7.08699 L 15.7793,7.19766 C 15.2714,6.70421 14.6546,6.30909 13.9342,6.05059 10.8495,4.94365 7.58806,6.96619 6.43793,10.0817 c -1.15155,3.1193 0.03057,6.7562 3.12789,7.8677 1.95948,0.7031 3.99018,0.1436 5.50578,-1.1568 0.1801,0.3528 0.427,0.6674 0.7312,0.9291 0.7853,0.6752 1.8613,0.9216 2.9233,0.6911 2.1772,-0.4726 3.9617,-2.7554 4.4694,-6.7241 0.0021,-0.0165 0.0039,-0.033 0.0053,-0.0495 C 23.4647,8.62581 22.6623,5.87667 20.8219,3.87384 18.9789,1.86813 16.2234,0.75 12.8523,0.75 6.70601,0.75 1.32927,5.73254 0.79338,11.8917 0.250578,18.1302 4.86475,23.25 11.1008,23.25 c 1.9247,0 3.1569,-0.1588 4.9633,-0.9225 l 0.2302,-0.0974 c 0.5087,-0.2151 0.7468,-0.8018 0.5317,-1.3105 l -0.1947,-0.4605 c -0.2151,-0.5087 -0.8018,-0.7467 -1.3105,-0.5316 l -0.2303,0.0973 C 13.6716,20.6247 12.7897,20.75 11.1008,20.75 6.35995,20.75 2.86574,16.9152 3.28397,12.1083 Z M 8.78321,10.9475 C 9.57932,8.79101 11.6022,7.86986 13.0898,8.40367 c 1.475,0.52929 2.4217,2.49623 1.627,4.64883 -0.7961,2.1565 -2.819,3.0776 -4.3066,2.5438 C 8.93524,15.067 7.98852,13.1001 8.78321,10.9475 Z" /></svg>`
-        },
-        {
-            name: 'dollar',
-            marker: '$',
-            color: "green",
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path d="m 10.333281,2.1749368 c 0,1.1239937 -0.01069,1.2582018 -0.08551,1.2582018 -0.149646,0 -1.1704466,0.3746645 -1.5018066,0.5480169 -1.1437262,0.6095289 -1.9454023,1.5433943 -2.3195179,2.6953479 -0.4008378,1.2470181 -0.2137799,2.868701 0.4596278,3.9479586 0.2725701,0.430585 0.8711549,1.051298 1.3094041,1.353266 0.753576,0.520057 1.459051,0.822025 3.7144326,1.571355 2.292794,0.766105 2.923445,1.274977 3.003613,2.432523 0.03741,0.542425 -0.04276,0.827618 -0.342049,1.157546 -0.283259,0.318745 -0.716164,0.559201 -1.325437,0.732553 -0.352738,0.09506 -0.582552,0.117433 -1.309405,0.123025 -0.764264,0.0056 -0.945977,-0.01118 -1.357505,-0.128616 C 9.7133184,17.631249 8.9971544,17.256584 8.3985694,16.725343 L 8.1420334,16.501663 7.361735,17.278952 C 6.9341746,17.703945 6.4692025,18.16249 6.3302457,18.291106 l -0.2458474,0.240456 0.2672251,0.262825 c 0.9192559,0.894721 2.079014,1.554578 3.393762,1.912467 l 0.5611736,0.156575 0.01603,1.207874 0.01069,1.213467 h 1.416294 1.416295 v -1.191099 -1.191097 l 0.384803,-0.0671 c 0.523763,-0.09506 1.432329,-0.419401 1.859889,-0.659857 1.117003,-0.637489 1.854544,-1.543395 2.201937,-2.706533 0.106891,-0.369073 0.122924,-0.53124 0.122924,-1.314121 0,-0.693409 -0.02138,-0.978602 -0.101546,-1.274978 -0.40618,-1.588134 -1.282678,-2.605878 -2.94482,-3.427904 C 14.042368,11.133337 13.716353,11.015905 11.936632,10.423152 10.70205,10.014935 9.9164084,9.6626382 9.5850484,9.3718538 9.4781584,9.2767899 9.3231674,9.0698852 9.2376564,8.9077175 9.0986984,8.6393008 9.0773204,8.5498285 9.0773204,8.1304283 c 0,-0.419401 0.01603,-0.5088732 0.144302,-0.732553 0.187058,-0.3355213 0.470317,-0.5871612 0.8711546,-0.7828817 1.074245,-0.5256484 2.752421,-0.5759771 4.115271,-0.1286158 0.149645,0.050329 0.47566,0.1901278 0.737541,0.3187445 0.256536,0.1230241 0.470317,0.2124964 0.481006,0.2013122 0.122924,-0.1677603 1.480428,-2.4157479 1.480428,-2.4548918 0,-0.078288 -1.266648,-0.7045932 -1.758343,-0.8667614 C 14.614231,3.517019 13.898067,3.3436666 13.47585,3.2933384 L 13.165869,3.2541948 V 2.0854647 0.91673492 h -1.416293 -1.416295 z" /></svg>`
+        this.classToolbar = 'ce-inline-toolbar__mention';
+        this.classToolbarIcon = 'ce-inline-toolbar__mention__icon';
+        this.classToolbarIconActive = 'ce-inline-toolbar__mention__icon--active';
+        this.classToolbarInput = 'ce-inline-tool-input';
+        this.classToolbarInputShow = 'ce-inline-tool-input--showed'
+
+        this.classToolbarSearchbar = 'ce-inline-toolbar__mention__searchbar';
+        this.classToolbarSearchbox = 'ce-inline-toolbar__mention__searchbox';
+        this.classEntry = 'ce-mention';
+        this.classEntryHighlight = 'ce-mention-highlight';
+
+        this.settings = this.mergeDictionary({
+            'arobase': {
+                marker: '@',
+                color: "#6565ff",
+                placeholder: "Search for a user",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="15" height="15"><path d="m 13.685243,40.158234 c 1.27545,-14.65887 14.21343,-26.5749 28.70499,-26.5749 8.4339,0 14.5389,2.75895 18.3861,6.94608 3.8424,4.18164 5.8161,10.20282 5.1945,17.49312 -1.3542,10.4424 -5.553,13.2864 -7.5501,13.7199 -1.0809,0.2346 -1.8612,-0.063 -2.2887,-0.4305 -0.3819,-0.3285 -0.7317,-0.9156 -0.5853,-1.9554 l 3.1029,-23.271 c 0.219,-1.64232 -0.9348,-3.1512 -2.5773,-3.37017 l -1.4868,-0.19827 c -1.6422,-0.21897 -3.1512,0.93489 -3.3702,2.57721 l -0.0441,0.33201 c -1.5237,-1.48035 -3.3741,-2.66571 -5.5353,-3.44121 -9.2541,-3.32082 -19.03842,2.7468 -22.48881,12.09333 -3.45465,9.3579 0.09171,20.2686 9.38367,23.6031 5.87844,2.1093 11.97054,0.4308 16.51734,-3.4704 0.5403,1.0584 1.281,2.0022 2.1936,2.7873 2.3559,2.0256 5.5839,2.7648 8.7699,2.0733 6.5316,-1.4178 11.8851,-8.2662 13.4082,-20.1723 0.0063,-0.0495 0.0117,-0.099 0.0159,-0.1485 0.7917,-9.04017 -1.6155,-17.28759 -7.1367,-23.29608 -5.529,-6.0171306 -13.7955,-9.3715206 -23.9088,-9.3715206 -18.43887,0 -34.5690904,14.9476206 -36.1767604,33.4251006 -1.628406,18.7155 12.2141104,34.0749 30.9222604,34.0749 5.7741,0 9.4707,-0.4764 14.8899,-2.7675 l 0.6906,-0.2922 c 1.5261,-0.6453 2.2404,-2.4054 1.5951,-3.9315 l -0.5841,-1.3815 c -0.6453,-1.5261 -2.4054,-2.2401 -3.9315,-1.5948 l -0.6909,0.2919 c -4.2567,1.7997 -6.9024,2.1756 -11.9691,2.1756 -14.22255,0 -24.70518,-11.5044 -23.45049,-25.9251 z m 16.49772,-3.4824 c 2.38833,-6.46947 8.45697,-9.23292 12.91977,-7.63149 4.425,1.58787 7.2651,7.48869 4.881,13.94649 -2.3883,6.4695 -8.457,9.2328 -12.9198,7.6314 -4.42488,-1.5879 -7.26504,-7.4886 -4.88097,-13.9464 z" /></svg>`
+            },
+            'hashtag': {
+                marker: '#',
+                color: "#f07272",
+                placeholder: "Search for a thread",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="15" height="15"><path d="m 65.416899,35.036362 a 4.5090054,5.1286673 0 0 0 0,-10.257333 h -8.071341 l 1.894055,-11.898507 a 4.5149847,5.1354682 0 0 0 -8.882872,-1.84632 L 48.101845,24.779029 H 37.055527 l 1.893212,-11.898507 a 4.5149788,5.1354616 0 0 0 -8.882842,-1.84632 l -2.254083,13.744827 h -9.739668 a 4.5090054,5.1286673 0 1 0 0,10.257333 h 8.183806 L 24.610296,45.2937 h -9.694349 a 4.5090054,5.1286671 0 0 0 0,10.257331 h 8.071337 l -1.894056,11.898522 a 4.5149849,5.1354686 0 1 0 8.882872,1.846321 l 2.254054,-13.744843 h 11.115127 l -1.894057,11.898522 a 4.5149849,5.1354686 0 1 0 8.882872,1.846321 l 2.254897,-13.744843 h 9.671708 a 4.5090054,5.1286671 0 1 0 0,-10.257331 H 54.07689 L 55.722549,35.036362 Z M 44.901141,45.2937 H 33.786044 l 1.645657,-10.257338 h 11.115096 z" style="stroke-width:0.814638" /></svg>`
+            },
+            'dollar': {
+                marker: '$',
+                color: "#82bd82",
+                placeholder: "Search for a keyword",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="15" height="15"><path d="m 35.583234,7.3877686 c 0,3.7363614 -0.03843,4.1824934 -0.307136,4.1824934 -0.537577,0 -4.204524,1.245456 -5.394846,1.821711 -4.108538,2.026187 -6.988335,5.130531 -8.332242,8.959835 -1.439902,4.145321 -0.767946,9.536096 1.651086,13.12375 0.979141,1.431345 3.129377,3.49471 4.70367,4.498507 2.707033,1.728766 5.241242,2.732563 13.343119,5.223476 8.236228,2.546674 10.501667,4.23826 10.789656,8.086157 0.134349,1.803121 -0.153747,2.751156 -1.228722,3.847898 -1.017534,1.059567 -2.572611,1.858887 -4.761284,2.435141 -1.267124,0.315998 -2.092653,0.39037 -4.703665,0.408958 -2.745433,0.01861 -3.398177,-0.03716 -4.876487,-0.427543 -3.110187,-0.780735 -5.682798,-2.026191 -7.83307,-3.792134 l -0.921515,-0.743554 -2.803015,2.583853 c -1.535897,1.412756 -3.206184,2.937044 -3.705349,3.364588 l -0.883142,0.79932 0.959937,0.873679 c 3.302163,2.974219 7.468286,5.167705 12.191169,6.357395 l 2.015851,0.520484 0.05748,4.015198 0.03843,4.033789 h 5.087674 5.087639 v -3.959434 -3.959428 l 1.382326,-0.223053 c 1.881465,-0.315997 5.145221,-1.394166 6.681114,-2.193486 4.012555,-2.119132 6.661968,-5.130531 7.909872,-8.997018 0.383974,-1.226868 0.441593,-1.76594 0.441593,-4.368382 0,-2.30502 -0.07688,-3.253055 -0.364791,-4.238263 -1.459089,-5.279252 -4.607678,-8.662422 -10.578465,-11.394988 -2.323058,-1.059564 -3.494161,-1.44993 -9.887323,-3.420352 -4.43493,-1.35699 -7.257129,-2.52809 -8.44745,-3.49471 -0.383973,-0.315997 -0.940733,-1.003801 -1.247904,-1.542878 -0.499177,-0.892264 -0.575978,-1.189689 -0.575978,-2.583852 0,-1.394167 0.05748,-1.691589 0.518394,-2.435142 0.671926,-1.115334 1.689462,-1.951832 3.129371,-2.602446 3.858951,-1.747351 9.887322,-1.914654 14.782992,-0.42754 0.537578,0.167307 1.70868,0.632017 2.649413,1.059565 0.921551,0.408955 1.689497,0.706379 1.727898,0.669198 0.441557,-0.557665 5.318043,-8.030395 5.318043,-8.160513 0,-0.26025 -4.550096,-2.342201 -6.316395,-2.881278 -1.919831,-0.557671 -4.492478,-1.133929 -6.009189,-1.301229 L 45.758474,10.975432 V 7.0903571 3.2052827 h -5.087639 -5.087637 z" /></svg>`
+            }
+        }, this.config.markers || {});
+
+        this._element = undefined;
+    }
+    
+    isObject(item) {
+        return (item && typeof item === 'object' && !Array.isArray(item));
+    }
+
+    mergeDictionary(target, ...sources) {
+        
+        if (!sources.length) return target;
+        const source = sources.shift();
+    
+        if (this.isObject(target) && this.isObject(source)) {
+
+            for (const key in source) {
+
+                if (!this.isObject(source[key])) Object.assign(target, { [key]: source[key] });
+                else {
+
+                    if (!target[key]) Object.assign(target, { [key]: {} });
+                    this.mergeDictionary(target[key], source[key]);
+                }
+            }
         }
-        ];
+    
+        return this.mergeDictionary(target, ...sources);
+    }
+    
+    getCurrentTextSelection()
+    {
+        return this.getTextFromSelection(this.getSelectionFromRange(this.getCurrentRange()));   
+    }
+
+    getTextFromSelection(selection)
+    {
+        if(selection         == undefined) return "";
+        if(selection.element == undefined) return "";
+        return selection.element.textContent.substring(selection.start, selection.start+selection.length);
+    }
+
+    getTextFromRange(range)
+    {
+        return this.getTextFromSelection(this.getSelectionFromRange(range));
+    }
+
+    getRangeFromElement = (element, positionA, positionB = -1) => {
+        
+        var rangeA = document.createRange();
+        if(positionB < 0) {
+
+            if (element.nodeType === Node.TEXT_NODE) {
+
+                rangeA.setStart(element, positionA);
+                rangeA.setEnd(element, positionA);
+                
+                return rangeA;
+            }
+
+            for (let child of element.childNodes) {
+                
+                if (positionA <= child.textContent.length)
+                    return this.getRangeFromElement(child, positionA);
+
+                positionA -= child.textContent.length;
+            }
+
+            return rangeA;
+
+        } 
+        
+        var rangeB = this.getRangeFromElement(element, positionB);
+
+        rangeA = this.getRangeFromElement(element, positionA);
+        rangeA.setEnd(rangeB.endContainer, rangeB.endOffset);
+
+        return rangeA;
+    };
+
+    findIndexInAncestor(el, ancestor)
+    {
+        if(el == ancestor) return -1;
+        if(el == null) return -1;
+
+        while( el.parentNode != ancestor ) {
+
+            el = el.parentNode;
+            if(el == null) return -1;
+        } 
+
+        return Array.prototype.indexOf.call(ancestor.childNodes, el);
+    }
+
+    findOffsetInAncestor(el, ancestor)
+    {
+        var offset = 0;
+
+        while( el.parentNode != ancestor ) {
+
+            el = el.parentNode;
+            if(el == null) return -1;
+        } 
+
+        return offset;
+    }
+
+    getRangeFromSelection(selection)
+    {
+        var range = undefined;
+        if(selection == undefined) range = this.getCurrentRange();
+        else range = this.getRangeFromElement(this._element, selection.start, selection.start + selection.length);
+
+        return range;
+    }
+
+    focusOnSelection(selection)
+    {
+        return this.focusOnRange(this.getRangeFromSelection(selection));
+    }
+
+    focusOnRange(range)
+    {
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+
+        this.lastSelection = this.getSelectionFromRange(range);
+        return range;
+    }
+
+    getCurrentRange()
+    {
+        if(window.getSelection().rangeCount < 1)
+            return document.createRange();
+
+        var range = window.getSelection().getRangeAt(0);
+        return range;
+    }
+
+    getCurrentSelection()
+    {
+        return this.getSelectionFromRange(this.getCurrentRange());
+    }
+
+    getSelectionFromRange(range)
+    {
+        var start = 0;
+        var end   = 0;
+
+        this._element = this.api.blocks.getBlockByIndex(this.api.blocks.getCurrentBlockIndex()).holder;
+        var ancestorRange = document.createRange();
+            ancestorRange.setStart(this._element, 0);
+        
+        ancestorRange.setEnd(range.startContainer, range.startOffset);
+        start = ancestorRange.toString().length;
+
+        ancestorRange.setEnd(range.endContainer, range.endOffset);
+        end = ancestorRange.toString().length;
+
+        return { start: start, length: (end-start), index: this.api.blocks.getCurrentBlockIndex(), element: this._element };
+    }
+
+    replaceSelectionWith(html, selection, selectPastedContent = false) {
+
+        var node = document.createElement("span");
+            node.innerHTML = html;
+
+        var range = this.focusOnSelection(selection);
+            range.deleteContents();
+            range.insertNode(node);
+
+        if(selectPastedContent) selection.length = html.textContent;
+        else selection.length = 0;
+
+        this.focusOnSelection(selection);
+    }
+
+    eraseSelection(selection) { this.replaceSelectionWith("", selection); }
+    eraseAtCaret(text)
+    {
+        var selection = this.getCurrentSelection();
+            selection.length = 1;
+    
+        while(this.getTextFromSelection(selection).startsWith(" ")) {
+            selection.start += 1;
+        }
+
+        selection.length = text.trim().length;
+        if (this.getTextFromSelection(selection) == text)
+            this.replaceSelectionWith("", selection);
+    }
+
+    insertAtCaret(html, selectPastedContent = false) {
+
+        if(html == "") return;
+        this.replaceSelectionWith(html, this.getCurrentSelection(), selectPastedContent);
     }
     
     render() {
+
         this.button = document.createElement('button');
         this.button.type = 'button';
-        this.button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M7.69998 12.6L7.67896 12.62C6.53993 13.7048 6.52012 15.5155 7.63516 16.625V16.625C8.72293 17.7073 10.4799 17.7102 11.5712 16.6314L13.0263 15.193C14.0703 14.1609 14.2141 12.525 13.3662 11.3266L13.22 11.12"></path><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M16.22 11.12L16.3564 10.9805C17.2895 10.0265 17.3478 8.5207 16.4914 7.49733V7.49733C15.5691 6.39509 13.9269 6.25143 12.8271 7.17675L11.3901 8.38588C10.0935 9.47674 9.95706 11.4241 11.0888 12.6852L11.12 12.72"></path></svg>';
+        this.button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="m 6.527992,12.335704 c 0.251909,-2.926628 2.807243,-5.3056501 5.669419,-5.3056501 1.665749,0 2.871526,0.5508213 3.631372,1.3867771 0.7589,0.8348597 1.148718,2.036983 1.025948,3.492482 -0.267464,2.084814 -1.096754,2.652616 -1.491194,2.739163 -0.213485,0.04684 -0.367599,-0.01258 -0.452033,-0.08595 -0.07543,-0.06558 -0.144515,-0.182798 -0.1156,-0.390393 L 15.408746,9.5261044 C 15.452001,9.1982167 15.224118,8.8969713 14.899713,8.8532539 l -0.293652,-0.039589 c -0.324346,-0.043713 -0.622382,0.1866497 -0.665637,0.5145364 l -0.0088,0.066281 C 13.630719,9.0989315 13.265253,8.8622755 12.838401,8.7074478 11.010658,8.0444503 9.078192,9.2558443 8.396718,11.121868 c -0.682316,1.868295 0.01812,4.046604 1.853335,4.712333 1.161029,0.421119 2.364257,0.086 3.26228,-0.692861 0.106713,0.211308 0.253005,0.399737 0.43325,0.556481 0.465306,0.404409 1.102856,0.551989 1.732112,0.413932 1.290033,-0.283062 2.347383,-1.650338 2.648205,-4.027378 0.0013,-0.0098 0.0023,-0.01977 0.0031,-0.02965 C 18.485404,10.24987 18.009966,8.6032816 16.919494,7.4036928 15.827481,6.2023793 14.194795,5.532679 12.197353,5.532679 c -3.641794,0 -6.827616,2.9842761 -7.145142,6.673285 -0.32162,3.736529 2.412366,6.803016 6.107345,6.803016 1.140421,0 1.870523,-0.09512 2.94085,-0.552528 l 0.136398,-0.05834 c 0.301415,-0.128834 0.442494,-0.480235 0.315043,-0.78492 l -0.115364,-0.275815 c -0.12745,-0.304683 -0.475082,-0.447233 -0.776497,-0.3184 l -0.136456,0.05827 c -0.840726,0.359308 -1.363268,0.434356 -2.363974,0.434356 -2.809044,0 -4.879431,-2.296841 -4.631622,-5.175917 z m 3.258406,-0.695258 c 0.471709,-1.291622 1.670305,-1.843342 2.551736,-1.523618 0.873966,0.317016 1.434904,1.495108 0.964029,2.784401 -0.471705,1.291628 -1.670311,1.843318 -2.551743,1.523601 C 9.876478,14.107807 9.315528,12.929738 9.786398,11.640446 Z" style="stroke-width:0.198575" /></svg>';
         this.button.classList.add(this.api.styles.inlineToolButton);
     
         return this.button;
     }
     
     surround(range) {
+
+        if(this.mentionMarker)
+            this.api.selection.expandToTag(this.mentionMarker);
+
         if (this.state) {
-        this.unwrap(range);
-        return;
+            this.unwrap(range);
+            return;
         }
     
         this.wrap(range);
     }
-    
+
     wrap(range) {
+    
         const selectedText = range.extractContents();
+        
         const mark = document.createElement(this.tag);
-    
-        mark.classList.add(this.class);
-        mark.appendChild(selectedText);
+              mark.innerText = selectedText.textContent;
+        
         range.insertNode(mark);
-    
-        this.api.selection.expandToTag(mark);
-    }
-    
-    unwrap(range) {
-        const mark = this.api.selection.findParentTag(this.tag, this.class);
-        const text = range.extractContents();
-    
-        mark.remove();
-    
-        range.insertNode(text);
-    }
-    
-    
-    checkState() {
-        const mark = this.api.selection.findParentTag(this.tag);
-    
-        this.state = !!mark;
-    
-        if (this.state) {
-        this.showActions(mark);
-        } else {
-        this.hideActions();
+        
+        if(mark.parentNode.getAttribute("contenteditable")) {
+
+            this.mentionMarker = mark;
+            this.mentionMarker.classList.add(this.classEntry);
+            this.mentionMarker.contentEditable = false;
+
+            this.api.selection.expandToTag(this.mentionMarker);
         }
     }
     
-    renderActions() {
-        this.colorPicker = document.createElement('input');
-        this.colorPicker.type = 'color';
-        this.colorPicker.value = '#f5f1cc';
-        this.colorPicker.hidden = true;
+    unwrap(range) {
+
+        const mark = this.api.selection.findParentTag(this.tag, this.classEntry);
+        if(mark) {
+            
+            const selection = this.getCurrentSelection();
+                  selection.length = mark.textContent.length;
+
+            mark.outerHTML = mark.textContent;
+            this.focusOnSelection(selection);
+            
+            this.mentionMarker = undefined;
+        }
+    }
     
-        return this.colorPicker;
+    checkState() {
+
+        const mark = this.mentionMarker || this.api.selection.findParentTag(this.tag, this.classEntry);
+        this.state = !!mark;
+
+        this.mentionMarker = mark;
+        if (this.state) this.showActions(mark);
+        else this.hideActions();
+    }
+    
+    renderActions() {
+
+        this.mentionToolbar = document.createElement('div');
+        this.mentionToolbar.classList.add(this.classToolbar);
+
+        this.mentionToolbarIcon = document.createElement('div');
+        this.mentionToolbarIcon.classList.add(this.classToolbarIcon);
+        this.mentionToolbar.appendChild(this.mentionToolbarIcon);
+
+        this.mentionToolbarSearchbar = document.createElement('div');
+        this.mentionToolbarSearchbar.classList.add(this.classToolbarSearchbar);
+        this.mentionToolbarSearchbarInput = document.createElement('input');
+        this.mentionToolbarSearchbarInput.classList.add(this.classToolbarInput, this.classToolbarInputShow);
+        this.mentionToolbarSearchbarInput.onfocus = (e) => {
+            if (this.mentionMarker && this._element.contains(e.relatedTarget)) {
+                const mention = this.settings[this.mentionMarker.dataset.mention];
+                this.focusInMark(this.mentionMarker, mention);
+            }
+        };
+        this.mentionToolbarSearchbarInput.onfocusout = (e) => {
+            if (this.mentionMarker && this._element.contains(e.relatedTarget)) {
+                const mention = this.settings[this.mentionMarker.dataset.mention];
+                this.focusOutMark(this.mentionMarker, mention);
+            }
+        };
+        this.mentionToolbarSearchbarInput.onkeyup = (e) => {
+            this.mentionMarker.innerHTML = this.mentionToolbarSearchbarInput.value;
+        };
+
+        this.mentionToolbarSearchbarInput.onkeydown = (e) => {
+
+            if(e.key == "Enter") {
+                
+                e.preventDefault();
+                return false;
+            }
+        };
+
+        this.mentionToolbarSearchbar.appendChild(this.mentionToolbarSearchbarInput);
+        this.mentionToolbar.appendChild(this.mentionToolbarSearchbar);
+
+        this.mentionToolbarSearchbox = document.createElement('ul');
+        this.mentionToolbarSearchbox.classList.add(this.classToolbarSearchbox);
+        this.mentionToolbar.appendChild(this.mentionToolbarSearchbox);
+
+        Object.keys(this.settings).forEach(function(key) {
+
+            var el = this.settings[key];
+            var button = document.createElement('button');
+                button.type = "button";
+                button.innerHTML = el.icon;
+
+            this.mentionToolbarIcon.appendChild(button);
+
+        }.bind(this));
+        
+        this.mentionToolbar.hidden = true;
+        this.mentionToolbarSearchbar.hidden = true;
+        this.mentionToolbarSearchbox.hidden = true;
+    
+        return this.mentionToolbar;
     }
     
     showActions(mark) {
-        const {backgroundColor} = mark.style;
-        this.colorPicker.value = backgroundColor ? this.convertToHex(backgroundColor) : '#f5f1cc';
+
+        this.mentionToolbar.hidden = false;
+        this.mentionToolbarIcon.childNodes.forEach(function(el, index) {
+
+            var name = Object.keys(this.settings)[index];
+            const mention = this.settings[name];
+
+            el.onclick = () => {
+
+                var markContent = mark.textContent;
+
+                this.mentionToolbarSearchbarInput.value = markContent;
+                this.mentionToolbarSearchbarInput.placeholder = mention.placeholder || "";
+                this.mentionToolbarIcon.childNodes.forEach(function(_el) {
+                    if(el == _el) _el.classList.toggle(this.classToolbarIconActive);
+                    else _el.classList.remove(this.classToolbarIconActive);
+                }.bind(this));
+
+                this.mentionToolbarSearchbar.hidden = !this.mentionToolbarSearchbar.hidden && mark.dataset.mention == name;
+                if(this.mentionToolbarSearchbar.hidden) this.focusOutMark(mark, mention);
+                else this.focusInMark(mark, mention);
+
+                mark.innerHTML = markContent;
+                mark.contentEditable = false; 
+                mark.dataset.mention = name;
+                mark.setAttribute('data-before', mention.marker);
+                
+                var markRange = this.getRangeFromElement(mark, 0, markContent.length);
+                this.focusOnRange(markRange);
+
+                // Delay input focus, due to race condition with editorjs internals
+                setTimeout(() => { this.mentionToolbarSearchbarInput.focus() }); 
+            };
+
+            var selectedName = mark.dataset.mention || Object.keys(this.settings)[0];
+            if(name == selectedName) this.mentionToolbarIcon.childNodes[index].click();
+
+        }.bind(this));
+    }
     
-        this.colorPicker.onchange = () => {
-            mark.style.backgroundColor = this.colorPicker.value;
-        };
-        this.colorPicker.hidden = false;
+    focusInMark(mark, mention) {
+
+        if(mark == undefined || mention == undefined || mark.tagName != "MARK") return;
+
+        mark.classList.add(this.classEntryHighlight, this.classEntry);
+        mark.style.backgroundColor = mention.color;
+        mark.style.outlineColor = null;
+        mark.style.color = null;
+    }
+    
+    focusOutMark(mark, mention) {
+
+        if(mark == undefined || mention == undefined  || mark.tagName != "MARK") return;
+
+        mark.classList.remove(this.classEntryHighlight);
+        mark.style.backgroundColor = null;
+        mark.style.outlineColor = mention.color;
+        mark.style.color = mention.color;
     }
     
     hideActions() {
-        this.colorPicker.onchange = null;
-        this.colorPicker.hidden = true;
+
+        this.mentionToolbar.hidden = true;
+        this.mentionToolbarSearchbar.hidden = true;
+        this.mentionToolbarSearchbox.hidden = true;
+        this.mentionToolbarIcon.childNodes.forEach(function(el) {
+            el.onclick = null;
+        });
     }
     
-    convertToHex(color) 
-    {
-        const rgb = color.match(/(\d+)/g);
+
+    /**
+     * Event listener that fetches users based on the inputted query.
+     */
+    // async function fetchUsers(searchQuery)
+    // {
+    //     if(searchQuery.trim() == "") return {};
+
+    //     var users = {};
+    //     if(classObj.endpoint == "") {
+
+    //         const items = classObj.users.filter(user => user?.name?.toLowerCase().includes(String(searchQuery).toLowerCase()) || user?.link?.label?.toLowerCase().includes(String(searchTextbox.value).toLowerCase()) );
+    //         users = {"success": 1, "items": items};
+        
+    //     } else {
+
+    //         const response = await fetch(classObj.endpoint + encodeURIComponent(searchQuery.trim()));
+    //         users = await response.json();
+    //     }
+
+    //     return users;
+    // }
+
+    // function searchQueryListener(e = {}) {
+
+    //     /**
+    //      * Gets the inputted search query.
+    //      */
+    //     if(this.value.trim() == "") {
+
+    //         classObj.deleteUserList();
+    //         return;
+    //     }
+
+    //     if(this.value.trim() == classObj.prevValue.trim()) return;
+
+    //     const searchQuery = this.value.trim();
+    //     try {
+
+    //         /**
+    //          * Fetch response from the search API
+    //         */
+    //         if(!(searchQuery in classObj.cacheUsers)) {
+                
+    //             fetchUsers(searchQuery).then(response => {
+            
+    //                 if(!response.success) return;
+
+    //                 /**
+    //                 * Creates user list items from the received user objects.
+    //                 */
+    //                 const userListItems = classObj.createUserListItems(response.items, searchQuery);
+
+    //                 /**
+    //                 * Removes all the current user list items.
+    //                 */
+    //                 classObj.deleteUserList();
+                    
+    //                 /**
+    //                 * Creates a new user list from the created user list items.
+    //                 */
+    //                 classObj.cacheUsers[searchQuery] = classObj.createUserList(userListItems)
+    //                 classObj.nodes.usersList.append(classObj.cacheUsers[searchQuery]);
+    //             });
+
+    //         } else {
+                        
+    //             /**
+    //             * Removes all the current user list items.
+    //             */
+    //             classObj.deleteUserList();
+                
+    //             classObj.nodes.usersList.append(classObj.cacheUsers[searchQuery]);
+    //         }
+
+    //     } catch (error) {
+
+    //         console.error(error);
+    //     }
+    // }
+
+    // //on keyup, start the countdown
+    // searchTextbox.addEventListener('keyup', function (e) {
+
+    //     if(e != undefined && e.key == "Backspace") {
+
+    //         classObj.deleteUserList();
+    //         if (classObj.prevValue == "" && this.value == "") {
     
-        let hexr = parseInt(rgb[0]).toString(16);
-        let hexg = parseInt(rgb[1]).toString(16);
-        let hexb = parseInt(rgb[2]).toString(16);
-    
-        hexr = hexr.length === 1 ? '0' + hexr : hexr;
-        hexg = hexg.length === 1 ? '0' + hexg : hexg;
-        hexb = hexb.length === 1 ? '0' + hexb : hexb;
-    
-        return '#' + hexr + hexg + hexb;
-    }        
+    //             classObj.hideUserMentionToolbar();
+    //         }
+    //     }
+
+    //     clearTimeout(classObj.typingTimer);
+    //     classObj.typingTimer = setTimeout(function() {
+    //         throttle(searchQueryListener.bind(searchTextbox), e, classObj.throttle)
+    //     }, classObj.typingDelay);
+    // });
+
+    // //on keydown, clear the countdown 
+    // searchTextbox.addEventListener('keydown', function () { 
+    //     classObj.prevValue = this.value.trim();
+    //     clearTimeout(classObj.typingTimer); 
+    // });
+
 }
