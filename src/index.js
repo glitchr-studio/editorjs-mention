@@ -68,6 +68,7 @@ export default class Mention {
             "error"  : "Error happened.."
         }, this.config.status || {});
 
+        const markers = Object.keys(Object.assign({}, this.config.data, this.config.endpoints));
         this.markers = this.mergeDictionary({
 
             'arobase': {
@@ -92,11 +93,12 @@ export default class Mention {
 
         }, this.config.markers || {});
 
+
         /**
          * Property which holds all data.
          */
         this.data     = this.mergeDictionary({'arobase':{}, 'hashtag':{}, 'dollar':{}}, this.config.data);
-        this.response = this.mergeDictionary({'arobase':{}, 'hashtag':{}, 'dollar':{}}, this.config.cache);
+        this.response = this.mergeDictionary({'arobase':{}, 'hashtag':{}, 'dollar':{}});
 
         /**
          * Property which stores the base url
@@ -109,6 +111,13 @@ export default class Mention {
             else if (this.endpoints[key] != "" && !this.endpoints[key].endsWith("/"))
                 this.endpoints[key] += "/";
         });
+
+        /**
+         * Restrict dictionary to fetchable content
+         */
+        this.markers   = this.restrictDictionary(this.markers, markers);
+        this.data      = this.restrictDictionary(this.data, markers);
+        this.endpoints = this.restrictDictionary(this.endpoints, markers);        
 
         /**
          * Throttle between two ajax call
@@ -135,6 +144,11 @@ export default class Mention {
 
     isObject(item) {
         return (item && typeof item === 'object' && !Array.isArray(item));
+    }
+
+    restrictDictionary(dict, keys = []) 
+    {
+        return Object.fromEntries(Object.entries(dict).filter(([k,v]) => keys.includes(k)));
     }
 
     mergeDictionary(target, ...sources) {
