@@ -73,6 +73,7 @@ export default class Mention {
 
             'arobase': {
                 id: '@',
+                name: "User",
                 color: "#6565ff",
                 placeholder: "Search for a user",
                 icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="15" height="15"><path d="m 13.685243,40.158234 c 1.27545,-14.65887 14.21343,-26.5749 28.70499,-26.5749 8.4339,0 14.5389,2.75895 18.3861,6.94608 3.8424,4.18164 5.8161,10.20282 5.1945,17.49312 -1.3542,10.4424 -5.553,13.2864 -7.5501,13.7199 -1.0809,0.2346 -1.8612,-0.063 -2.2887,-0.4305 -0.3819,-0.3285 -0.7317,-0.9156 -0.5853,-1.9554 l 3.1029,-23.271 c 0.219,-1.64232 -0.9348,-3.1512 -2.5773,-3.37017 l -1.4868,-0.19827 c -1.6422,-0.21897 -3.1512,0.93489 -3.3702,2.57721 l -0.0441,0.33201 c -1.5237,-1.48035 -3.3741,-2.66571 -5.5353,-3.44121 -9.2541,-3.32082 -19.03842,2.7468 -22.48881,12.09333 -3.45465,9.3579 0.09171,20.2686 9.38367,23.6031 5.87844,2.1093 11.97054,0.4308 16.51734,-3.4704 0.5403,1.0584 1.281,2.0022 2.1936,2.7873 2.3559,2.0256 5.5839,2.7648 8.7699,2.0733 6.5316,-1.4178 11.8851,-8.2662 13.4082,-20.1723 0.0063,-0.0495 0.0117,-0.099 0.0159,-0.1485 0.7917,-9.04017 -1.6155,-17.28759 -7.1367,-23.29608 -5.529,-6.0171306 -13.7955,-9.3715206 -23.9088,-9.3715206 -18.43887,0 -34.5690904,14.9476206 -36.1767604,33.4251006 -1.628406,18.7155 12.2141104,34.0749 30.9222604,34.0749 5.7741,0 9.4707,-0.4764 14.8899,-2.7675 l 0.6906,-0.2922 c 1.5261,-0.6453 2.2404,-2.4054 1.5951,-3.9315 l -0.5841,-1.3815 c -0.6453,-1.5261 -2.4054,-2.2401 -3.9315,-1.5948 l -0.6909,0.2919 c -4.2567,1.7997 -6.9024,2.1756 -11.9691,2.1756 -14.22255,0 -24.70518,-11.5044 -23.45049,-25.9251 z m 16.49772,-3.4824 c 2.38833,-6.46947 8.45697,-9.23292 12.91977,-7.63149 4.425,1.58787 7.2651,7.48869 4.881,13.94649 -2.3883,6.4695 -8.457,9.2328 -12.9198,7.6314 -4.42488,-1.5879 -7.26504,-7.4886 -4.88097,-13.9464 z" /></svg>`
@@ -80,12 +81,14 @@ export default class Mention {
             ,
             'hashtag': {
                 id: '#',
+                name: "Thread",
                 color: "#f07272",
                 placeholder: "Search for a keyword",
                 icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="15" height="15"><path d="m 65.416899,35.036362 a 4.5090054,5.1286673 0 0 0 0,-10.257333 h -8.071341 l 1.894055,-11.898507 a 4.5149847,5.1354682 0 0 0 -8.882872,-1.84632 L 48.101845,24.779029 H 37.055527 l 1.893212,-11.898507 a 4.5149788,5.1354616 0 0 0 -8.882842,-1.84632 l -2.254083,13.744827 h -9.739668 a 4.5090054,5.1286673 0 1 0 0,10.257333 h 8.183806 L 24.610296,45.2937 h -9.694349 a 4.5090054,5.1286671 0 0 0 0,10.257331 h 8.071337 l -1.894056,11.898522 a 4.5149849,5.1354686 0 1 0 8.882872,1.846321 l 2.254054,-13.744843 h 11.115127 l -1.894057,11.898522 a 4.5149849,5.1354686 0 1 0 8.882872,1.846321 l 2.254897,-13.744843 h 9.671708 a 4.5090054,5.1286671 0 1 0 0,-10.257331 H 54.07689 L 55.722549,35.036362 Z M 44.901141,45.2937 H 33.786044 l 1.645657,-10.257338 h 11.115096 z" style="stroke-width:0.814638" /></svg>`
             },
             'dollar': {
                 id: '$',
+                name: "Keyword",
                 color: "#82bd82",
                 placeholder: "Search for a thread",
                 icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="15" height="15"><path d="m 35.583234,7.3877686 c 0,3.7363614 -0.03843,4.1824934 -0.307136,4.1824934 -0.537577,0 -4.204524,1.245456 -5.394846,1.821711 -4.108538,2.026187 -6.988335,5.130531 -8.332242,8.959835 -1.439902,4.145321 -0.767946,9.536096 1.651086,13.12375 0.979141,1.431345 3.129377,3.49471 4.70367,4.498507 2.707033,1.728766 5.241242,2.732563 13.343119,5.223476 8.236228,2.546674 10.501667,4.23826 10.789656,8.086157 0.134349,1.803121 -0.153747,2.751156 -1.228722,3.847898 -1.017534,1.059567 -2.572611,1.858887 -4.761284,2.435141 -1.267124,0.315998 -2.092653,0.39037 -4.703665,0.408958 -2.745433,0.01861 -3.398177,-0.03716 -4.876487,-0.427543 -3.110187,-0.780735 -5.682798,-2.026191 -7.83307,-3.792134 l -0.921515,-0.743554 -2.803015,2.583853 c -1.535897,1.412756 -3.206184,2.937044 -3.705349,3.364588 l -0.883142,0.79932 0.959937,0.873679 c 3.302163,2.974219 7.468286,5.167705 12.191169,6.357395 l 2.015851,0.520484 0.05748,4.015198 0.03843,4.033789 h 5.087674 5.087639 v -3.959434 -3.959428 l 1.382326,-0.223053 c 1.881465,-0.315997 5.145221,-1.394166 6.681114,-2.193486 4.012555,-2.119132 6.661968,-5.130531 7.909872,-8.997018 0.383974,-1.226868 0.441593,-1.76594 0.441593,-4.368382 0,-2.30502 -0.07688,-3.253055 -0.364791,-4.238263 -1.459089,-5.279252 -4.607678,-8.662422 -10.578465,-11.394988 -2.323058,-1.059564 -3.494161,-1.44993 -9.887323,-3.420352 -4.43493,-1.35699 -7.257129,-2.52809 -8.44745,-3.49471 -0.383973,-0.315997 -0.940733,-1.003801 -1.247904,-1.542878 -0.499177,-0.892264 -0.575978,-1.189689 -0.575978,-2.583852 0,-1.394167 0.05748,-1.691589 0.518394,-2.435142 0.671926,-1.115334 1.689462,-1.951832 3.129371,-2.602446 3.858951,-1.747351 9.887322,-1.914654 14.782992,-0.42754 0.537578,0.167307 1.70868,0.632017 2.649413,1.059565 0.921551,0.408955 1.689497,0.706379 1.727898,0.669198 0.441557,-0.557665 5.318043,-8.030395 5.318043,-8.160513 0,-0.26025 -4.550096,-2.342201 -6.316395,-2.881278 -1.919831,-0.557671 -4.492478,-1.133929 -6.009189,-1.301229 L 45.758474,10.975432 V 7.0903571 3.2052827 h -5.087639 -5.087637 z" /></svg>`
@@ -507,6 +510,7 @@ export default class Mention {
             var button = document.createElement('button');
                 button.type = "button";
                 button.innerHTML = el.icon;
+                button.title = el.name;
 
             this.mentionToolbarIcon.appendChild(button);
 
@@ -641,9 +645,11 @@ export default class Mention {
         this.mentionToolbar.hidden = false;
 
         setTimeout(function() {
+
             this.mentionToolbarButton.parentNode.parentNode.childNodes.forEach(function(actions) {
                 actions.childNodes.forEach(function(el) { el.disabled = el != this.mentionToolbarButton; }.bind(this));
             }.bind(this));
+
         }.bind(this));
 
         this.mentionToolbarIcon.childNodes.forEach(function(el, i) {
@@ -659,7 +665,7 @@ export default class Mention {
                     mentionEl.removeAttribute("data-id");
                     mentionEl.removeAttribute("data-json");
                 }
-                
+
                 this.mentionToolbarSearchbarInput.value = markContent;
                 this.mentionToolbarSearchbarInput.placeholder = marker.placeholder || "";
                 this.mentionToolbarIcon.childNodes.forEach(function(_el) {
@@ -667,7 +673,8 @@ export default class Mention {
                     else _el.classList.remove(this._CSS.toolbarIconActive);
                 }.bind(this));
 
-                this.mentionToolbarSearchbar.hidden = !this.mentionToolbarSearchbar.hidden && mentionEl.dataset.marker == markerName;
+                this.mentionToolbarSearchbox.hidden = !el.classList.contains(this._CSS.toolbarIconActive);
+                this.mentionToolbarSearchbar.hidden = !el.classList.contains(this._CSS.toolbarIconActive);
                 if(this.mentionToolbarSearchbar.hidden) this.focusOutMark(mentionEl, marker);
                 else this.focusInMark(mentionEl, marker);
 
@@ -692,7 +699,7 @@ export default class Mention {
                 }); 
             };
 
-            var selectedMarkerName = mentionEl.dataset.marker || Object.keys(this.markers)[0];
+            var selectedMarkerName = mentionEl.dataset.marker;
             if (selectedMarkerName == markerName) this.mentionToolbarIcon.childNodes[i].click();
 
         }.bind(this));
@@ -822,12 +829,11 @@ export default class Mention {
         var holder = document.createElement("div");
             holder.classList.add(this._CSS.toolbarSearchboxAvatar);
 
-
         const getInitials = function(name)
         {
             let rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu');
 
-            let initials = [...name.matchAll(rgx)] || [];
+            let initials = [...String(name).matchAll(rgx)] || [];
                 initials = ((initials.shift()?.[1] || '') + (initials.pop()?.[1] || '')).toUpperCase();
 
             return initials ? initials : undefined;

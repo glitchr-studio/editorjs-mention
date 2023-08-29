@@ -10,12 +10,17 @@
 
 .ce-mention { transition: all 0.15s ease; }
 .ce-mention-highlight[data-marker]:empty { padding-left: 10px; }
-.ce-mention.ce-mention-highlight[data-marker] { color:white; }
+.ce-mention.ce-mention-highlight[data-marker] { 
+    font-weight:400 !important;
+    color:white !important; 
+    text-decoration: none !important; 
+}
 .ce-mention:not(.ce-mention-highlight)[data-marker]
 {
-    outline-style: dashed;
+    outline-style: dashed !important;
     padding:2px 7px;
 
+    text-decoration: none !important; 
     margin:1px;
 }
 
