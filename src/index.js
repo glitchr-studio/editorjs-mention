@@ -411,6 +411,9 @@ export default class Mention {
         this.mentionMarker = mark;
         if (this.state) this.showActions(mark);
         else this.hideActions();
+
+        this.state = !!mark;
+        return this.state;
     }
     
     renderActions() {
@@ -644,13 +647,15 @@ export default class Mention {
 
         this.mentionToolbar.hidden = false;
 
-        setTimeout(function() {
+        var el = this.mentionToolbarButton;
+        if (el != null && el.parentNode != null) el = el.parentNode;
+        if (el != null && el.parentNode != null) el = el.parentNode;
 
-            this.mentionToolbarButton.parentNode.parentNode.childNodes.forEach(function(actions) {
-                actions.childNodes.forEach(function(el) { el.disabled = el != this.mentionToolbarButton; }.bind(this));
-            }.bind(this));
-
+        el.childNodes.forEach(function(actions) {
+            actions.childNodes.forEach(function(el) { 
+                el.disabled = el != this.mentionToolbarButton; }.bind(this));
         }.bind(this));
+
 
         this.mentionToolbarIcon.childNodes.forEach(function(el, i) {
 
@@ -715,7 +720,11 @@ export default class Mention {
             el.onclick = null;
         });
 
-        this.mentionToolbarButton.parentNode.parentNode.childNodes.forEach(function(actions) {
+        var el = this.mentionToolbarButton;
+        if (el != null && el.parentNode != null) el = el.parentNode;
+        if (el != null && el.parentNode != null) el = el.parentNode;
+            
+        el.childNodes.forEach(function(actions) {
             actions.childNodes.forEach(function(el) { el.disabled = false; }.bind(this));
         });
     }
