@@ -17,6 +17,7 @@
 }
 .ce-mention:not(.ce-mention-highlight)[data-marker]
 {
+    outline-width: thin;
     outline-style: dashed !important;
     padding:2px 7px;
 
